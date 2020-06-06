@@ -95,11 +95,6 @@ function main(){
 }
 #--------------------------------------------------------------------------------------------------------------
 
-# function check_errors(){
-# 	[ $? -ne 0 ] && echo "Error Downloading page...." && exit -1
-# }
-
-
 ###########################
 #         MAIN            #
 ###########################
@@ -113,14 +108,32 @@ echo "========================================================================"
 
 
 
+#---------------------------------------------------------------------------------------------------
 
-# dump_webpage
-# find_url
+# Renaming every first file of chapter with trailing chapter name eg-> 01.jpg 01-Chapter-19.jpg
+function renaming(){
+	chapter_name="Chapter-$(printf "%02d" $c)"
+	cd $chapter_name
+	[[ -f 01.jpg ]] && mv 01.jpg 01-$chapter_name.jpg
+	[[ -f 001.jpg ]] && mv 001.jpg 001-$chapter_name.jpg
+	cd ..
+}
 
-# download_files
 
+function chapters_renaming(){
+	c=1
+	cd $manga_name 
+	for (( c=1; c<=$last_chapter; c++ ))
+	do
+		renaming
+	done
+	cd ..
+}
 
-#END
-
-#to download in current folder
-# wget "https://cdn.manhwa.club/data/manga_5bf3793e73db1/288836c7bd3a02b0a2e7dd9b61860f1f/28_stacked.jpg"
+###########################
+#         RENAMING        #
+###########################
+echo "########### RENAMING ###############"
+echo "This is done to have a Bookmark of chapters from Images"
+echo "if file 01.jpg OR 001.jpg exist chaged to 01-Chapter-<number>.jpg OR 001-Chapter-<number>.jpg"
+chapters_renaming
